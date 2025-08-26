@@ -63,6 +63,50 @@ int main(int argc, char *argv[])
 
     // Step 3: using malloc create the array that we will be sorting
 
+    float *arr = NULL;
+    if (arr > 0)
+    {
+        // set the pointer arr (of type float) to the starting address of the memory block that will be big enough (hopefully) to hold the contents of the input file
+        arr = (float *)malloc((size_t)size_of_file * sizeof(float));
+
+        if (!arr)
+        {
+            fprintf(stderr, "Malloc failed for %d floats!\n" , size_of_file);
+            fclose(input);
+            return 1;
+        }
+
+        // now time to read the file into the array
+        for (unsigned int i = 0; i < size_of_file; i++)
+        {
+            if (fscanf(input, "%f", &arr[i]) != 1)
+            {
+                fprintf(stderr, "Error reading float #%d.\n", i + 1);
+                free(arr);
+                fclose(input);
+                return 1;
+            }
+        }
+
+        // now that we have read the input file we will close it
+        fclose(input);
+
+        // CALL BUBBLE_SORT
+
+        // handle output file
+        FILE *output = fopen(output_file_path, "w"); // open in write mode
+
+        if(!output)
+        {
+            perror("Error opening the ouput file!\n");
+            free(arr);
+            return 1;
+        }
+
+        // print the first line (the total number of floats) to the file
+        fprintf(output, "%d\n", size_of_file);
+        
+    }
 
     return 0;
 }
