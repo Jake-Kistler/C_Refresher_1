@@ -11,8 +11,8 @@ step 4: Write the sorted integers to the output file with the first number again
 step 5: Free and terminate
 */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h> // file IO
+#include <stdlib.h> // malloc and free come from here
 
 
 // function prototypes
@@ -37,14 +37,31 @@ int main(int argc, char *argv[])
 
     if (argc < 3)
     {
-        printf(stderr, "Usage: %s <input.txt> <output.txt>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <input.txt> <output.txt>\n", argv[0]);
         return 1;
     }
 
     // input and output file paths as constants so we don't break them
     const char *input_file_path = argv[1];
     const char *output_file_path = argv[2];
-    
+
+    // step 2: (Try) to read in integers from input file with the first number in the file being the total number of numbers that exist in the file
+    FILE *input = fopen(input_file_path, "r"); // open in read mode
+    if (!input)
+    {
+        perror("Error opening input file");
+        return 1;
+    }
+
+    int size_of_file = 0;
+    if (fscanf(input, "%d", &size_of_file) != 1 || size_of_file < 0) // checks for one int being read and guards aginst negive counts being read
+    {
+        fprintf(stderr, "Invalid count at start of the input file.\n");
+        fclose(input);
+        return 1;
+    }
+
+    // Step 3: using malloc create the array that we will be sorting
 
 
     return 0;
