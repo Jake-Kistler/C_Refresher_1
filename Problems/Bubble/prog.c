@@ -89,7 +89,8 @@ int main(int argc, char *argv[])
         // now that we have read the input file we will close it
         fclose(input);
 
-        // TODO: CALL BUBBLE_SORT
+        //call  BUBBLE_SORT
+        bubble_sort(arr, size_of_file);
 
         // handle output file
         FILE *output = fopen(output_file_path, "w"); // open in write mode
@@ -117,10 +118,31 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+// --------------------------------------------------------
+//              Function definitions
+// --------------------------------------------------------
+
 void print_array(float *arr, int size)
 {
     for (unsigned int i = 0; i < size; i++)
     {
         printf("%f\n", arr[i]);
+    }
+}
+
+// bubble sort is a O(n^2) sorting algorithm that 
+void bubble_sort(float *arr, int size)
+{
+    for (unsigned int i = 0; i < size; i++)
+    {
+        for (unsigned int j = 0; j < size - i - 1; j++)
+        {
+            if (arr[j] > arr[j + 1])
+            {
+                float temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
     }
 }
