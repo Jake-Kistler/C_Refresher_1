@@ -11,9 +11,8 @@ step 4: Write the sorted integers to the output file with the first number again
 step 5: Free and terminate
 */
 
-#include <stdio.h> // file IO
+#include <stdio.h>  // file IO
 #include <stdlib.h> // malloc and free come from here
-
 
 // function prototypes
 
@@ -62,9 +61,8 @@ int main(int argc, char *argv[])
     }
 
     // Step 3: using malloc create the array that we will be sorting
-
     float *arr = NULL;
-    if (arr > 0)
+    if (size_of_file > 0)
     {
         // set the pointer arr (of type float) to the starting address of the memory block that will be big enough (hopefully) to hold the contents of the input file
         arr = (float *)malloc((size_t)size_of_file * sizeof(float));
@@ -91,7 +89,7 @@ int main(int argc, char *argv[])
         // now that we have read the input file we will close it
         fclose(input);
 
-        // CALL BUBBLE_SORT
+        // TODO: CALL BUBBLE_SORT
 
         // handle output file
         FILE *output = fopen(output_file_path, "w"); // open in write mode
@@ -105,9 +103,24 @@ int main(int argc, char *argv[])
 
         // print the first line (the total number of floats) to the file
         fprintf(output, "%d\n", size_of_file);
-        
+
+        // print the sorted array on a new line 
+        for (unsigned int i = 0; i < size_of_file; i++)
+        {
+            fprintf(output, "%f\n", arr[i]);
+        }
+
+        fclose(output); 
+        free(arr);
     }
 
     return 0;
 }
 
+void print_array(float *arr, int size)
+{
+    for (unsigned int i = 0; i < size; i++)
+    {
+        printf("%f\n", arr[i]);
+    }
+}
