@@ -1,4 +1,4 @@
-// Selection sort in C using a Makefile for PDN
+// Quick sort in C using a Makefile for PDN
 // Jake Kistler
 // University of Oklahoma
 
@@ -6,7 +6,7 @@
 At a high level this is rather simple.
 step 1: Read in input file name, output file name
 step 2: Read in floats from input file with the first number in the file being the total number of numbers that exist in the file
-step 3: Sort the floats using selection sort
+step 3: Sort the floats using quick sort
 step 4: Write the sorted floats to the output file with the first number again being the total numbers in the file
 step 5: Free and terminate
 */
@@ -19,9 +19,11 @@ step 5: Free and terminate
 
 // Helper functions
 void print_array(float *arr, int size);
+static void swap(float *a, float *b);
 
-// Core function
-static void selection_sort(float *arr, int size);
+// Core functions
+static int partition(float *arr, int low, int high);
+static void quick_sort(float *arr, int low, int high);
 
 int main(int argc, char *argv[])
 {
@@ -35,7 +37,7 @@ int main(int argc, char *argv[])
     const char *input_file_path = argv[1];
     const char *output_file_path = argv[2];
 
-    // Step 2: (Try) to read in floats from input file with the first number as the total count
+    // Step 2: (Try) to read in floats from input file with count on first line
     FILE *input = fopen(input_file_path, "r");
     if (!input)
     {
@@ -75,10 +77,10 @@ int main(int argc, char *argv[])
     }
     fclose(input);
 
-    // Step 3: selection sort
+    // Step 3: quick sort
     if (size_of_file > 1)
     {
-        selection_sort(arr, size_of_file);
+        quick_sort(arr, 0, size_of_file - 1);
     }
 
     // Step 4: write output
@@ -115,23 +117,36 @@ void print_array(float *arr, int size)
     }
 }
 
-static void selection_sort(float *arr, int size)
+static void swap(float *a, float *b)
 {
-    for (int i = 0; i < size - 1; i++)
+    float t = *a;
+    *a = *b;
+    *b = t;
+}
+
+static int partition(float *arr, int low, int high)
+{
+    float pivot = arr[high];
+    int i = low - 1;
+
+    for (int j = low; j <= high - 1; j++)
     {
-        int min_idx = i;
-        for (int j = i + 1; j < size; j++)
+        if (arr[j] <= pivot)
         {
-            if (arr[j] < arr[min_idx])
-            {
-                min_idx = j;
-            }
+            i++;
+            swap(&arr[i], &arr[j]);
         }
-        if (min_idx != i)
-        {
-            float t = arr[i];
-            arr[i] = arr[min_idx];
-            arr[min_idx] = t;
-        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return i + 1;
+}
+
+static void quick_sort(float *arr, int low, int high)
+{
+    if (low < high)
+    {
+        int p = partition(arr, low, high);
+        quick_sort(arr, low, p - 1);
+        quick_sort(arr, p + 1, high);
     }
 }
