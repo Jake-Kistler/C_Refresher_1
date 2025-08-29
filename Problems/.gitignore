@@ -1,0 +1,23 @@
+# Ignore compiled binaries
+*.o
+*.out
+*.x
+
+# Ignore temporary files
+*.tmp
+*~
+
+# Ignore gcov/coverage files
+*.gcda
+*.gcno
+*.gcov
+
+# Ignore valgrind output logs if you save them
+valgrind*.log
+
+# Ignore all test subdirectories
+**/tests/
+
+# Ignore input/output text files if they are just scratch data
+input.txt
+output.txt
