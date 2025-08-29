@@ -26,7 +26,7 @@ tests:
 	@printf "1\n42\n"                              > tests/t_one.txt
 	@printf "6\n-1\n-1\n2.5\n2.5\n2.5\n-3\n"       > tests/t_dups_negs.txt
 	@printf "5\n9\n7\n5\n3\n1\n"                   > tests/t_rev.txt
-	@printf "-5\n"                                 > tests/t_badcount.txt
+	@/usr/bin/printf '%s\n' -5                                 > tests/t_badcount.txt
 
 run: all tests
 	./$(PROG) tests/t_normal.txt tests/out_normal.txt
