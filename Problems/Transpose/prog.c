@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
   if (argc != 3)
   {
-    die("Usage: ./prog <input file> <output file>");
+    endProgram("Usage: ./prog <input file> <output file>");
   }
 
   const char *infile = argv[1];
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
   if (!in)
   {
-    die("Unable to open input file.");
+    endProgram("Unable to open input file.");
   }
 
   int rows, cols;
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
   if (fscanf(in, "%d %d", &rows, &cols) != 2 || rows <= 0 || cols <= 0)
   {
     fclose(in);
-    die("Invalid matrix dimensions.");
+    endProgram("Invalid matrix dimensions.");
   }
 
   double *data = malloc(sizeof(double) * rows * cols);
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
   if (!data)
   {
     fclose(in);
-    die("malloc failed");
+    endProgram("malloc failed");
   }
 
   for (int r = 0; r < rows; r++)
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
         free(data);
         fclose(in);
-        die("Invalid matrix data.");
+        endProgram("Invalid matrix data.");
       }
 
     }
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
   if (!out)
   {
     free(data);
-    die("Unable to open output file.");
+    endProgram("Unable to open output file.");
   }
 
   fprintf(out, "%d %d\n", cols, rows);
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
   free(data);
   fclose(out);
-  
+
   return 0;
 }
 
