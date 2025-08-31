@@ -49,6 +49,41 @@ valgrind: all tests
 	valgrind --leak-check=full --show-leak-kinds=all ./$(PROG) tests/t_badcount.txt out.tmp || true
 	valgrind --leak-check=full --show-leak-kinds=all ./$(PROG) tests/NOFILE.txt out.tmp || true
 
+	# --- Coverage with gcov ---
+COVFLAGS = -fprofile-arcs -ftest-coverage -O0
+
+coverage: clean
+	# two-step build so .gcno is definitely produced
+	$(CC) $(CFLAGS) $(COVFLAGS) -c $(SRC) -o $(OBJ)
+	$(CC) $(CFLAGS) $(COVFLAGS) $(OBJ) -o $(PROG) $(LIBS)
+	# reuse your test inputs
+	$(MAKE) tests >/dev/null
+
+	# success-path runs (produce .gcda)
+	./$(PROG) tests/t_one.txt   tests/out_one.txt
+	./$(PROG) tests/t_three.txt tests/out_three.txt
+	./$(PROG) tests/t_five.txt  tests/out_five.txt
+
+	# error-path runs (exercise die(...) branches)
+	-./$(PROG) tests/t_badcount.txt       out.tmp || true
+	-./$(PROG) tests/t_badcount_zero.txt  out.tmp || true
+	-./$(PROG) tests/t_badnum.txt         out.tmp || true
+	-./$(PROG) tests/NOFILE.txt           out.tmp || true
+
+	# also hit "failed to open output" by writing to a directory
+	@mkdir -p tests/out_dir
+	-./$(PROG) tests/t_one.txt tests/out_dir || true
+
+	# also hit "usage" path (argc != 3)
+	-./$(PROG) || true
+
+	$(MAKE) gcov
+
+gcov:
+	@echo
+	@echo "==== gcov report ($(SRC)) ===="
+	@gcov -b -o . $(SRC) | sed 's/^/  /'
+
 clean:
 	rm -f $(PROG) *.o out.tmp
 	rm -rf tests
